@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PersonaLab</title>
+
+<style>
+:root{
+  --bg:#0b0d12;
+  --panel:#131722;
+  --panel2:#191e2b;
+  --line:#292f40;
+  --text:#f5f7fb;
+  --muted:#98a2b3;
+  --accent:#7c5cff;
+  --accent2:#9b87ff;
+  --danger:#ff5c7a;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+button,input,textarea,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+  color:inherit;
+}
+
+.app{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.top{
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 14px;
+  border-bottom:1px solid var(--line);
+  background:#0e1118;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.brand{
+  font-weight:800;
+  font-size:20px;
+}
+
+.brand span{
+  color:var(--accent2);
+}
+
+.top-actions{
+  display:flex;
+  gap:8px;
+}
+
+.iconbtn,
+.btn{
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:10px;
+  padding:9px 12px;
+}
+
+.btn.primary{
+  background:var(--accent);
+  border-color:var(--accent);
+}
+
+.btn.danger{
+  color:#ff9bad;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:240px 1fr 300px;
+  min-height:calc(100vh - 64px);
+}
+
+.sidebar,
+.rightbar{
+  background:#10131b;
+  padding:14px;
+  border-color:var(--line);
+}
+
+.sidebar{
+  border-right:1px solid var(--line);
+}
+
+.rightbar{
+  border-left:1px solid var(--line);
+}
+
+.section-title{
+  font-size:12px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin:8px 4px;
+}
+
+.room,
+.char{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  border:1px solid transparent;
+  background:transparent;
+  border-radius:10px;
+  text-align:left;
+  margin:3px 0;
+}
+
+.room.active,
+.room:hover,
+.char:hover{
+  background:var(--panel2);
+  border-color:var(--line);
+}
+
+.avatar{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#7657ff,#4cc9f0);
+  font-weight:800;
+  flex:none;
+}
+
+.small{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.main{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.scene{
+  padding:16px 18px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.scene h1{
+  font-size:18px;
+  margin:0 0 4px;
+}
+
+.status{
+  font-size:12px;
+  color:#8fe0b1;
+}
+
+.controls{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.messages{
+  flex:1;
+  overflow:auto;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  min-height:350px;
+}
+
+.msg{
+  max-width:850px;
+  display:flex;
+  gap:10px;
+}
+
+.msg.user{
+  margin-left:auto;
+  flex-direction:row-reverse;
+}
+
+.bubble{
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:11px 13px;
+  border-radius:14px;
+  line-height:1.45;
+}
+
+.user .bubble{
+  background:#30265f;
+  border-color:#51418d;
+}
+
+.name{
+  font-weight:750;
+  font-size:13px;
+  margin-bottom:3px;
+}
+
+.typing{
+  color:var(--muted);
+  font-size:13px;
+  padding:0 18px 10px;
+  display:none;
+}
+
+.composer{
+  padding:12px 14px;
+  border-top:1px solid var(--line);
+  background:#0e1118;
+}
+
+.compose-row{
+  display:flex;
+  gap:8px;
+}
+
+.compose-row textarea{
+  flex:1;
+  resize:none;
+  min-height:46px;
+  max-height:130px;
+  background:var(--panel);
+  color:var(--text);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px;
+  outline:none;
+}
+
+.compose-row textarea:focus{
+  border-color:var(--accent);
+}
+
+.send{
+  width:52px;
+  border:0;
+  border-radius:12px;
+  background:var(--accent);
+  font-weight:800;
+}
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:12px;
+}
+
+.panel h3{
+  font-size:14px;
+  margin:0 0 10px;
+}
+
+.stat{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  padding:6px 0;
+  border-bottom:1px solid #222737;
+}
+
+.stat:last-child{
+  border-bottom:0;
+}
+
+.pill{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#242a3b;
+  color:#cfd5e4;
+  font-size:11px;
+  margin:2px;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:50px 20px;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:#0009;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  z-index:50;
+}
+
+.modal.open{
+  display:flex;
+}
+
+.modal-card{
+  width:min(620px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:18px;
+}
+
+.modal-card h2{
+  margin-top:0;
+}
+
+.field{
+  margin:10px 0;
+}
+
+.field label{
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:5px;
+}
+
+.field input,
+.field textarea,
+.field select{
+  width:100%;
+  background:#0d1017;
+  color:var(--text);
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:10px;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:15px;
+}
+
+@media(max-width:980px){
+  .layout{
+    grid-template-columns:190px 1fr;
+  }
+
+  .rightbar{
+    display:none;
+  }
+}
+
+@media(max-width:650px){
+  .layout{
+    display:block;
+  }
+
+  .sidebar{
+    display:none;
+  }
+
+  .top{
+    height:58px;
+  }
+
+  .scene{
+    padding:12px;
+  }
+
+  .messages{
+    padding:12px;
+  }
+
+  .composer{
+    padding:9px;
+  }
+
+  .controls .hide-mobile{
+    display:none;
+  }
+
+  .brand{
+    font-size:18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="top">
+  <div class="brand">
+    Persona<span>Lab</span>
+  </div>
+
+  <div class="top-actions">
+    <button class="iconbtn" id="saveBtn">💾 Save</button>
+    <button class="iconbtn" id="settingsBtn">⚙️</button>
+  </div>
+</header>
+
+
+<div class="layout">
+
+<aside class="sidebar">
+
+  <div class="section-title">
+    Rooms
+  </div>
+
+  <button class="room active" data-room="Main Room">
+    🛋️ <span>Main Room</span>
+  </button>
+
+  <button class="room" data-room="Kitchen">
+    🍳 <span>Kitchen</span>
+  </button>
+
+  <button class="room" data-room="Outside">
+    🌳 <span>Outside</span>
+  </button>
+
+  <button class="room" data-room="Study">
+    📚 <span>Study</span>
+  </button>
+
+
+  <div class="section-title" style="margin-top:18px">
+    Characters
+  </div>
+
+  <div id="characterList"></div>
+
+  <button
+    class="btn"
+    id="addCharacter"
+    style="width:100%;margin-top:8px"
+  >
+    ＋ Character
+  </button>
+
+</aside>
+
+
+<main class="main">
+
+  <div class="scene">
+
+    <div>
+      <h1 id="roomTitle">Main Room</h1>
+
+      <div class="status" id="simStatus">
+        ● Simulation paused
+      </div>
+    </div>
+
+    <div class="controls">
+
+      <button class="btn primary" id="toggleSim">
+        ▶ Start
+      </button>
+
+      <button class="btn" id="directorBtn">
+        🎬 Director
+      </button>
+
+      <button class="btn" id="clearBtn">
+        Clear
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="messages" id="messages"></div>
+
+
+  <div class="typing" id="typing">
+    Characters are thinking…
+  </div>
+
+
+  <div class="composer">
+
+    <div class="compose-row">
+
+      <textarea
+        id="input"
+        placeholder="Talk to the room…"
+      ></textarea>
+
+      <button class="send" id="send">
+        ➤
+      </button>
+
+    </div>
+
+    <div class="small" style="margin-top:6px">
+      Enter to send · Shift+Enter for a new line
+    </div>
+
+  </div>
+
+</main>
+
+
+<aside class="rightbar">
+
+  <div class="panel">
+
+    <h3>
+      Simulation
+    </h3>
+
+    <div class="stat">
+      <span>Room</span>
+      <b id="sideRoom">Main Room</b>
+    </div>
+
+    <div class="stat">
+      <span>Characters</span>
+      <b id="charCount">0</b>
+    </div>
+
+    <div class="stat">
+      <span>Messages</span>
+      <b id="msgCount">0</b>
+    </div>
+
+  </div>
+
+
+  <div class="panel">
+
+    <h3>
+      Selected character
+    </h3>
+
+    <div id="selectedInfo" class="small">
+      Select a character to inspect them.
+    </div>
+
+  </div>
+
+
+  <div class="panel">
+
+    <h3>
+      Traits
+    </h3>
+
+    <div id="traits">
+      <span class="small">
+        No character selected.
+      </span>
+    </div>
+
+  </div>
+
+</aside>
+
+</div>
+</div>
+
+
+<div class="modal" id="modal">
+
+  <div class="modal-card">
+
+    <h2 id="modalTitle">
+      Settings
+    </h2>
+
+    <div id="modalBody"></div>
+
+    <div class="modal-actions">
+
+      <button class="btn" id="modalClose">
+        Close
+      </button>
+
+      <button class="btn primary" id="modalSave">
+        Save
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const KEY = "personala_lab_v1";
+
+
+const state = {
+
+  room:"Main Room",
+
+  running:false,
+
+  selected:null,
+
+  apiUrl:"",
+
+  characters:[
+
+    {
+      id:"ava",
+      name:"Ava",
+      emoji:"🧠",
+      personality:"curious, thoughtful, observant",
+      traits:["Curious","Calm","Analytical"],
+      emotion:"Neutral",
+      memory:[]
+    },
+
+    {
+      id:"milo",
+      name:"Milo",
+      emoji:"⚡",
+      personality:"energetic, funny, impulsive",
+      traits:["Funny","Energetic","Bold"],
+      emotion:"Happy",
+      memory:[]
+    },
+
+    {
+      id:"zoe",
+      name:"Zoe",
+      emoji:"🎨",
+      personality:"creative, expressive, independent",
+      traits:["Creative","Expressive","Independent"],
+      emotion:"Curious",
+      memory:[]
+    }
+
+  ],
+
+  messages:[]
+
+};
+
+
+function save(){
+
+  localStorage.setItem(
+    KEY,
+    JSON.stringify(state)
+  );
+
+}
+
+
+function load(){
+
+  try{
+
+    const x =
+      JSON.parse(
+        localStorage.getItem(KEY)
+      );
+
+    if(x){
+
+      Object.assign(state,x);
+
+    }
+
+  }catch{}
+
+}
+
+
+function esc(s){
+
+  return String(s ?? "")
+    .replace(/[&<>"']/g,c=>({
+
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+
+    }[c]));
+
+}
+
+
+function render(){
+
+  document.getElementById("roomTitle")
+    .textContent = state.room;
+
+  document.getElementById("sideRoom")
+    .textContent = state.room;
+
+  document.getElementById("charCount")
+    .textContent = state.characters.length;
+
+  document.getElementById("msgCount")
+    .textContent = state.messages.length;
+
+  document.getElementById("simStatus")
+    .textContent =
+      state.running
+        ? "● Simulation running"
+        : "● Simulation paused";
+
+  document.getElementById("toggleSim")
+    .textContent =
+      state.running
+        ? "⏸ Pause"
+        : "▶ Start";
+
+
+  const list =
+    document.getElementById(
+      "characterList"
+    );
+
+
+  list.innerHTML =
+    state.characters.map(c => `
+
+      <button
+        class="char"
+        data-id="${c.id}"
+      >
+
+        <span class="avatar">
+          ${esc(c.emoji)}
+        </span>
+
+        <span>
+
+          <b>${esc(c.name)}</b>
+
+          <br>
+
+          <span class="small">
+            ${esc(c.emotion)}
+          </span>
+
+        </span>
+
+      </button>
+
+    `).join("");
+
+
+  list
+    .querySelectorAll(".char")
+    .forEach(b => {
+
+      b.onclick = () =>
+        selectChar(b.dataset.id);
+
+    });
+
+
+  const m =
+    document.getElementById("messages");
+
+
+  if(state.messages.length){
+
+    m.innerHTML =
+      state.messages.map(x => `
+
+        <div class="msg ${x.role==="user"?"user":""}">
+
+          <div class="avatar">
+            ${esc(x.emoji || "💬")}
+          </div>
+
+          <div class="bubble">
+
+            <div class="name">
+              ${esc(x.name || "You")}
+            </div>
+
+            ${esc(x.content)
+              .replace(/\n/g,"<br>")}
+
+          </div>
+
+        </div>
+
+      `).join("");
+
+  }else{
+
+    m.innerHTML = `
+
+      <div class="empty">
+
+        <div style="font-size:42px">
+          🧪
+        </div>
+
+        <h2>
+          PersonaLab is ready
+        </h2>
+
+        <p>
+          Create a scene, start the simulation,
+          and talk to the characters.
+        </p>
+
+      </div>
+
+    `;
+
+  }
+
+
+  m.scrollTop =
+    m.scrollHeight;
+
+}
+
+
+function selectChar(id){
+
+  state.selected = id;
+
+  const c =
+    state.characters.find(
+      x => x.id === id
+    );
+
+  if(!c) return;
+
+
+  document.getElementById(
+    "selectedInfo"
+  ).innerHTML = `
+
+    <b>
+      ${esc(c.emoji)}
+      ${esc(c.name)}
+    </b>
+
+    <br>
+
+    <span class="small">
+      ${esc(c.personality)}
+    </span>
+
+    <br><br>
+
+    Emotion:
+    <b>${esc(c.emotion)}</b>
+
+  `;
+
+
+  document.getElementById(
+    "traits"
+  ).innerHTML =
+    c.traits
+      .map(t =>
+        `<span class="pill">
+          ${esc(t)}
+        </span>`
+      )
+      .join("");
+
+}
+
+
+async function send(){
+
+  const input =
+    document.getElementById("input");
+
+  const text =
+    input.value.trim();
+
+  if(!text) return;
+
+
+  state.messages.push({
+
+    role:"user",
+    name:"You",
+    emoji:"👤",
+    content:text
+
+  });
+
+
+  input.value = "";
+
+  render();
+
+  save();
+
+
+  if(!state.running){
+
+    return;
+
+  }
+
+
+  await aiReply(text);
+
+}
+
+
+async function aiReply(userText){
+
+  const typing =
+    document.getElementById("typing");
+
+  typing.style.display = "block";
+
+
+  try{
+
+    if(!state.apiUrl){
+
+      throw new Error("NO_API");
+
+    }
+
+
+    const messages = [
+
+      {
+        role:"system",
+        content:buildContext()
+      },
+
+      ...state.messages
+        .slice(-40)
+        .map(m => ({
+          role:m.role,
+          content:m.content
+        }))
+
+    ];
+
+
+    const response =
+      await fetch(
+
+        state.apiUrl,
+
+        {
+
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:JSON.stringify({
+            messages
+          })
+
+        }
+
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if(!response.ok){
+
+      throw new Error(
+        data.error ||
+        "AI request failed"
+      );
+
+    }
+
+
+    const content =
+      data.message ||
+      data.messages?.[0]?.content;
+
+
+    if(!content){
+
+      throw new Error(
+        "AI returned no content"
+      );
+
+    }
+
+
+    state.messages.push({
+
+      role:"assistant",
+
+      name:"PersonaLab",
+
+      emoji:"🤖",
+
+      content
+
+    });
+
+
+  }catch(e){
+
+    const c =
+      chooseCharacter(userText);
+
+
+    state.messages.push({
+
+      role:"assistant",
+
+      name:c.name,
+
+      emoji:c.emoji,
+
+      content:
+        localReply(c,userText)
+
+    });
+
+  }finally{
+
+    typing.style.display = "none";
+
+    render();
+
+    save();
+
+  }
+
+}
+
+
+function buildContext(){
+
+  return `
+
+PersonaLab social personality simulation.
+
+Current room:
+${state.room}
+
+Characters:
+
+${state.characters.map(c => `
+
+Name: ${c.name}
+
+Personality:
+${c.personality}
+
+Traits:
+${c.traits.join(", ")}
+
+Current emotion:
+${c.emotion}
+
+Memories:
+${c.memory.join(" | ")}
+
+`).join("\n")}
+
+Respond naturally as the simulation.
+
+Characters should have different personalities,
+opinions, emotions, relationships and reactions.
+
+Do not force every character to speak.
+
+Sometimes one character responds.
+
+Sometimes several characters respond.
+
+Sometimes nobody has anything useful to say.
+
+Characters can disagree, joke, interrupt,
+ask questions, ignore things, or change topics.
+
+Keep their personalities consistent.
+
+Characters only know information they have learned.
+
+The user should be able to interact naturally
+with the characters.
+
+`;
+
+
+}
+
+
+function chooseCharacter(){
+
+  if(!state.characters.length){
+
+    return {
+      name:"PersonaLab",
+      emoji:"🤖"
+    };
+
+  }
+
+
+  return state.characters[
+    Math.floor(
+      Math.random() *
+      state.characters.length
+    )
+  ];
+
+}
+
+
+function localReply(c,t){
+
+  return `${c.name} looks thoughtful.
+
+“I heard you. ${
+    t.length > 80
+      ? "That gives me a lot to think about."
+      : "What do you mean by that?"
+  }”`;
+
+}
+
+
+function addCharacter(){
+
+  openModal(
+
+    "Create character",
+
+    `
+
+    <div class="field">
+
+      <label>Name</label>
+
+      <input
+        id="fName"
+        placeholder="Character name"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Emoji</label>
+
+      <input
+        id="fEmoji"
+        value="🙂"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Personality</label>
+
+      <textarea
+        id="fPersonality"
+        placeholder="e.g. sarcastic, loyal, shy"
+      ></textarea>
+
+    </div>
+
+
+    <div class="field">
+
+      <label>
+        Traits, separated by commas
+      </label>
+
+      <input
+        id="fTraits"
+        placeholder="Funny, Loyal, Shy"
+      >
+
+    </div>
+
+    `,
+
+    () => {
+
+      const name =
+        document
+          .getElementById("fName")
+          .value
+          .trim();
+
+
+      if(!name) return;
+
+
+      state.characters.push({
+
+        id:
+          crypto.randomUUID(),
+
+        name,
+
+        emoji:
+          document
+            .getElementById("fEmoji")
+            .value ||
+          "🙂",
+
+        personality:
+          document
+            .getElementById("fPersonality")
+            .value ||
+          "friendly",
+
+        traits:
+          document
+            .getElementById("fTraits")
+            .value
+            .split(",")
+            .map(x=>x.trim())
+            .filter(Boolean),
+
+        emotion:"Neutral",
+
+        memory:[]
+
+      });
+
+
+      save();
+
+      render();
+
+    }
+
+  );
+
+}
+
+
+function openModal(
+  title,
+  body,
+  saveFn
+){
+
+  document.getElementById(
+    "modalTitle"
+  ).textContent = title;
+
+
+  document.getElementById(
+    "modalBody"
+  ).innerHTML = body;
+
+
+  document.getElementById(
+    "modal"
+  ).classList.add("open");
+
+
+  document.getElementById(
+    "modalSave"
+  ).onclick = () => {
+
+    saveFn?.();
+
+    document.getElementById(
+      "modal"
+    ).classList.remove("open");
+
+  };
+
+}
+
+
+document.getElementById(
+  "addCharacter"
+).onclick = addCharacter;
+
+
+document.getElementById(
+  "toggleSim"
+).onclick = () => {
+
+  state.running =
+    !state.running;
+
+  render();
+
+  save();
+
+};
+
+
+document.getElementById(
+  "send"
+).onclick = send;
+
+
+document.getElementById(
+  "input"
+).addEventListener(
+  "keydown",
+  e => {
+
+    if(
+      e.key === "Enter" &&
+      !e.shiftKey
+    ){
+
+      e.preventDefault();
+
+      send();
+
+    }
+
+  }
+);
+
+
+document
+  .querySelectorAll(".room")
+  .forEach(button => {
+
+    button.onclick = () => {
+
+      state.room =
+        button.dataset.room;
+
+
+      document
+        .querySelectorAll(".room")
+        .forEach(x =>
+          x.classList.remove("active")
+        );
+
+
+      button.classList.add("active");
+
+      render();
+
+      save();
+
+    };
+
+  });
+
+
+document.getElementById(
+  "clearBtn"
+).onclick = () => {
+
+  if(
+    confirm(
+      "Clear this conversation?"
+    )
+  ){
+
+    state.messages = [];
+
+    render();
+
+    save();
+
+  }
+
+};
+
+
+document.getElementById(
+  "saveBtn"
+).onclick = () => {
+
+  save();
+
+  alert(
+    "PersonaLab saved on this device."
+  );
+
+};
+
+
+document.getElementById(
+  "settingsBtn"
+).onclick = () => {
+
+  openModal(
+
+    "PersonaLab settings",
+
+    `
+
+    <div class="field">
+
+      <label>
+        Cloudflare Worker URL
+      </label>
+
+      <input
+        id="apiUrl"
+        value="${esc(state.apiUrl)}"
+        placeholder="https://your-worker.workers.dev"
+      >
+
+    </div>
+
+    <div class="small">
+
+      The URL is stored only in this
+      browser. Never put your Cloudflare
+      secret token here.
+
+    </div>
+
+    `,
+
+    () => {
+
+      state.apiUrl =
+        document
+          .getElementById("apiUrl")
+          .value
+          .trim();
+
+      save();
+
+    }
+
+  );
+
+};
+
+
+document.getElementById(
+  "directorBtn"
+).onclick = () => {
+
+  openModal(
+
+    "Director",
+
+    `
+
+    <div class="field">
+
+      <label>
+        Scene instruction
+      </label>
+
+      <textarea
+        id="directorText"
+        placeholder="Example: A surprise visitor enters the room."
+      ></textarea>
+
+    </div>
+
+    <div class="small">
+
+      This adds a director instruction
+      to the simulation.
+
+    </div>
+
+    `,
+
+    () => {
+
+      const t =
+        document
+          .getElementById("directorText")
+          .value
+          .trim();
+
+
+      if(!t) return;
+
+
+      state.messages.push({
+
+        role:"user",
+
+        name:"Director",
+
+        emoji:"🎬",
+
+        content:
+          "[Director] " + t
+
+      });
+
+
+      render();
+
+      save();
+
+
+      if(state.running){
+
+        aiReply(t);
+
+      }
+
+    }
+
+  );
+
+};
+
+
+document.getElementById(
+  "modalClose"
+).onclick = () => {
+
+  document
+    .getElementById("modal")
+    .classList.remove("open");
+
+};
+
+
+load();
+
+render();
+
+</script>
+
+</body>
+</html>
