@@ -6,25 +6,19 @@
 <title>PersonaLab</title>
 
 <style>
-:root{
-  --bg:#0b0d12;
-  --panel:#131722;
-  --panel2:#191e2b;
-  --line:#292f40;
-  --text:#f5f7fb;
-  --muted:#98a2b3;
-  --accent:#7c5cff;
-  --accent2:#9b87ff;
-  --danger:#ff5c7a;
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
-*{box-sizing:border-box}
-
-body{
+html,body{
   margin:0;
-  background:var(--bg);
-  color:var(--text);
+  width:100%;
+  height:100%;
+  overflow:hidden;
   font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#0b0d12;
+  color:#f5f7fb;
 }
 
 button,input,textarea,select{
@@ -33,379 +27,602 @@ button,input,textarea,select{
 
 button{
   cursor:pointer;
-  color:inherit;
 }
 
 .app{
-  min-height:100vh;
+  width:100%;
+  height:100%;
   display:flex;
-  flex-direction:column;
+  overflow:hidden;
 }
 
-.top{
-  height:64px;
+/* SIDEBAR */
+
+.sidebar{
+  width:270px;
+  min-width:270px;
+  background:#11141b;
+  border-right:1px solid #252a35;
   display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 14px;
-  border-bottom:1px solid var(--line);
-  background:#0e1118;
-  position:sticky;
-  top:0;
+  flex-direction:column;
   z-index:20;
 }
 
 .brand{
-  font-weight:800;
-  font-size:20px;
+  padding:20px;
+  border-bottom:1px solid #252a35;
 }
 
-.brand span{
-  color:var(--accent2);
+.brand h1{
+  margin:0;
+  font-size:22px;
 }
 
-.top-actions{
-  display:flex;
-  gap:8px;
+.brand p{
+  margin:5px 0 0;
+  color:#8991a2;
+  font-size:13px;
 }
 
-.iconbtn,
-.btn{
-  border:1px solid var(--line);
-  background:var(--panel);
-  border-radius:10px;
-  padding:9px 12px;
-}
-
-.btn.primary{
-  background:var(--accent);
-  border-color:var(--accent);
-}
-
-.btn.danger{
-  color:#ff9bad;
-}
-
-.layout{
-  display:grid;
-  grid-template-columns:240px 1fr 300px;
-  min-height:calc(100vh - 64px);
-}
-
-.sidebar,
-.rightbar{
-  background:#10131b;
-  padding:14px;
-  border-color:var(--line);
-}
-
-.sidebar{
-  border-right:1px solid var(--line);
-}
-
-.rightbar{
-  border-left:1px solid var(--line);
-}
-
-.section-title{
+.sidebar-title{
+  padding:16px 18px 8px;
   font-size:12px;
-  color:var(--muted);
   text-transform:uppercase;
   letter-spacing:.08em;
-  margin:8px 4px;
+  color:#727b8d;
 }
 
-.room,
-.char{
+.character-list{
+  padding:8px 12px;
+  overflow-y:auto;
+  flex:1;
+}
+
+.character-card{
   width:100%;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:10px;
   border:1px solid transparent;
   background:transparent;
-  border-radius:10px;
+  color:#fff;
   text-align:left;
-  margin:3px 0;
+  padding:11px;
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin-bottom:5px;
 }
 
-.room.active,
-.room:hover,
-.char:hover{
-  background:var(--panel2);
-  border-color:var(--line);
+.character-card:hover{
+  background:#191d26;
+}
+
+.character-card.active{
+  background:#202632;
+  border-color:#343c4d;
 }
 
 .avatar{
-  width:34px;
-  height:34px;
-  border-radius:50%;
+  width:40px;
+  height:40px;
+  border-radius:12px;
   display:grid;
   place-items:center;
-  background:linear-gradient(135deg,#7657ff,#4cc9f0);
-  font-weight:800;
+  font-size:20px;
+  background:#242a36;
   flex:none;
 }
 
-.small{
-  font-size:12px;
-  color:var(--muted);
+.character-card strong{
+  display:block;
+  font-size:14px;
 }
+
+.character-card small{
+  display:block;
+  color:#8991a2;
+  margin-top:2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.add-character{
+  margin:10px 12px 15px;
+}
+
+/* BUTTONS */
+
+.btn{
+  border:1px solid #303746;
+  background:#1a1f29;
+  color:#fff;
+  border-radius:11px;
+  padding:10px 13px;
+}
+
+.btn:hover{
+  background:#232936;
+}
+
+.btn.primary{
+  background:#5865f2;
+  border-color:#5865f2;
+}
+
+.btn.primary:hover{
+  background:#6874ff;
+}
+
+.btn.danger{
+  color:#ff8585;
+}
+
+.btn.full{
+  width:100%;
+}
+
+/* MAIN */
 
 .main{
+  min-width:0;
+  flex:1;
   display:flex;
   flex-direction:column;
-  min-width:0;
+  background:#0b0d12;
 }
 
-.scene{
-  padding:16px 18px;
-  border-bottom:1px solid var(--line);
+.topbar{
+  min-height:64px;
+  height:64px;
+  border-bottom:1px solid #252a35;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:10px;
+  padding:0 16px;
+  background:#10131a;
+  z-index:10;
 }
 
-.scene h1{
-  font-size:18px;
-  margin:0 0 4px;
-}
-
-.status{
-  font-size:12px;
-  color:#8fe0b1;
-}
-
-.controls{
+.topbar-left,
+.topbar-right{
   display:flex;
-  gap:7px;
-  flex-wrap:wrap;
-}
-
-.messages{
-  flex:1;
-  overflow:auto;
-  padding:18px;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  min-height:350px;
-}
-
-.msg{
-  max-width:850px;
-  display:flex;
-  gap:10px;
-}
-
-.msg.user{
-  margin-left:auto;
-  flex-direction:row-reverse;
-}
-
-.bubble{
-  background:var(--panel);
-  border:1px solid var(--line);
-  padding:11px 13px;
-  border-radius:14px;
-  line-height:1.45;
-}
-
-.user .bubble{
-  background:#30265f;
-  border-color:#51418d;
-}
-
-.name{
-  font-weight:750;
-  font-size:13px;
-  margin-bottom:3px;
-}
-
-.typing{
-  color:var(--muted);
-  font-size:13px;
-  padding:0 18px 10px;
-  display:none;
-}
-
-.composer{
-  padding:12px 14px;
-  border-top:1px solid var(--line);
-  background:#0e1118;
-}
-
-.compose-row{
-  display:flex;
+  align-items:center;
   gap:8px;
 }
 
-.compose-row textarea{
+.room-name{
+  font-weight:700;
+}
+
+.status{
+  color:#7e8799;
+  font-size:12px;
+}
+
+.mobile-only{
+  display:none;
+}
+
+.chat{
   flex:1;
-  resize:none;
+  min-height:0;
+  overflow-y:auto;
+  padding:22px;
+}
+
+.empty{
+  height:100%;
+  display:grid;
+  place-items:center;
+  color:#778094;
+  text-align:center;
+}
+
+.empty-inner{
+  max-width:430px;
+}
+
+.empty h2{
+  color:#fff;
+  margin-bottom:8px;
+}
+
+.message{
+  max-width:820px;
+  margin:0 auto 16px;
+  display:flex;
+  gap:11px;
+}
+
+.message.user{
+  justify-content:flex-end;
+}
+
+.message.user .message-body{
+  background:#5865f2;
+  border-color:#6672ff;
+}
+
+.message-body{
+  background:#151922;
+  border:1px solid #282e3a;
+  border-radius:15px;
+  padding:12px 14px;
+  max-width:min(720px,85%);
+}
+
+.message-name{
+  font-weight:700;
+  font-size:13px;
+  margin-bottom:5px;
+}
+
+.message-text{
+  white-space:pre-wrap;
+  line-height:1.48;
+  font-size:14px;
+}
+
+.message-meta{
+  color:#747e91;
+  font-size:10px;
+  margin-top:6px;
+}
+
+.composer{
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  border-top:1px solid #252a35;
+  background:#10131a;
+}
+
+.composer-inner{
+  max-width:850px;
+  margin:auto;
+  display:flex;
+  gap:8px;
+  align-items:flex-end;
+}
+
+.composer textarea{
+  flex:1;
   min-height:46px;
   max-height:130px;
-  background:var(--panel);
-  color:var(--text);
-  border:1px solid var(--line);
-  border-radius:12px;
+  resize:none;
+  border:1px solid #303746;
+  border-radius:13px;
+  background:#171b24;
+  color:#fff;
   padding:12px;
   outline:none;
 }
 
-.compose-row textarea:focus{
-  border-color:var(--accent);
+.composer textarea:focus{
+  border-color:#5865f2;
 }
 
 .send{
-  width:52px;
-  border:0;
-  border-radius:12px;
-  background:var(--accent);
-  font-weight:800;
+  height:46px;
+}
+
+/* RIGHT PANEL */
+
+.rightbar{
+  width:280px;
+  min-width:280px;
+  background:#11141b;
+  border-left:1px solid #252a35;
+  padding:16px;
+  overflow-y:auto;
 }
 
 .panel{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:12px;
+  border:1px solid #282e3a;
+  background:#151922;
+  border-radius:14px;
+  padding:14px;
   margin-bottom:12px;
 }
 
 .panel h3{
-  font-size:14px;
   margin:0 0 10px;
+  font-size:14px;
 }
 
 .stat{
   display:flex;
   justify-content:space-between;
+  gap:10px;
+  margin:7px 0;
   font-size:13px;
-  padding:6px 0;
-  border-bottom:1px solid #222737;
 }
 
-.stat:last-child{
-  border-bottom:0;
+.stat span:first-child{
+  color:#818a9d;
 }
 
-.pill{
+.tag{
   display:inline-block;
-  padding:4px 8px;
-  border-radius:999px;
-  background:#242a3b;
-  color:#cfd5e4;
+  padding:4px 7px;
+  border-radius:7px;
+  background:#222936;
+  color:#cbd1dc;
   font-size:11px;
   margin:2px;
 }
 
-.empty{
-  text-align:center;
-  color:var(--muted);
-  padding:50px 20px;
-}
+/* MODALS */
 
-.modal{
+.overlay{
   position:fixed;
   inset:0;
-  background:#0009;
+  background:rgba(0,0,0,.68);
   display:none;
   align-items:center;
   justify-content:center;
-  padding:18px;
-  z-index:50;
+  z-index:100;
+  padding:16px;
 }
 
-.modal.open{
+.overlay.open{
   display:flex;
 }
 
-.modal-card{
-  width:min(620px,100%);
-  max-height:90vh;
-  overflow:auto;
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:16px;
+.modal{
+  width:min(700px,100%);
+  max-height:min(850px,94vh);
+  overflow-y:auto;
+  background:#12161e;
+  border:1px solid #303746;
+  border-radius:18px;
+  box-shadow:0 20px 70px rgba(0,0,0,.5);
   padding:18px;
 }
 
-.modal-card h2{
-  margin-top:0;
+.modal.small{
+  width:min(450px,100%);
+}
+
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.modal-header h2{
+  margin:0;
+  font-size:19px;
+}
+
+.close{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  border:1px solid #303746;
+  background:#1a1f29;
+  color:#fff;
 }
 
 .field{
-  margin:10px 0;
+  margin-bottom:13px;
 }
 
 .field label{
   display:block;
   font-size:12px;
-  color:var(--muted);
-  margin-bottom:5px;
+  color:#929bad;
+  margin-bottom:6px;
 }
 
 .field input,
 .field textarea,
 .field select{
   width:100%;
-  background:#0d1017;
-  color:var(--text);
-  border:1px solid var(--line);
-  border-radius:9px;
+  border:1px solid #303746;
+  background:#171b24;
+  color:#fff;
+  border-radius:10px;
   padding:10px;
+  outline:none;
+}
+
+.field textarea{
+  min-height:80px;
+  resize:vertical;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
 }
 
 .modal-actions{
   display:flex;
-  justify-content:flex-end;
   gap:8px;
+  justify-content:flex-end;
   margin-top:15px;
 }
 
-@media(max-width:980px){
-  .layout{
-    grid-template-columns:190px 1fr;
-  }
+/* TEMPLATE GRID */
 
-  .rightbar{
-    display:none;
-  }
+.template-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
 }
 
-@media(max-width:650px){
-  .layout{
-    display:block;
+.template{
+  border:1px solid #303746;
+  background:#171b24;
+  color:#fff;
+  text-align:left;
+  padding:12px;
+  border-radius:12px;
+}
+
+.template:hover{
+  background:#202632;
+}
+
+.template .emoji{
+  font-size:24px;
+}
+
+.template strong{
+  display:block;
+  margin-top:6px;
+}
+
+.template small{
+  color:#8991a2;
+}
+
+/* MOBILE CHARACTER DRAWER */
+
+.drawer{
+  position:fixed;
+  inset:0;
+  z-index:80;
+  display:none;
+}
+
+.drawer.open{
+  display:block;
+}
+
+.drawer-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.62);
+}
+
+.drawer-panel{
+  position:absolute;
+  top:0;
+  left:0;
+  bottom:0;
+  width:min(330px,88vw);
+  background:#11141b;
+  border-right:1px solid #303746;
+  padding:18px;
+  overflow-y:auto;
+  padding-top:calc(18px + env(safe-area-inset-top));
+}
+
+.drawer-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+
+.drawer-header h2{
+  margin:0;
+  font-size:19px;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:90px;
+  transform:translateX(-50%) translateY(20px);
+  background:#202632;
+  border:1px solid #384153;
+  padding:10px 14px;
+  border-radius:11px;
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+  z-index:300;
+  font-size:13px;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+  .rightbar{
+    display:none;
   }
 
   .sidebar{
     display:none;
   }
 
-  .top{
+  .mobile-only{
+    display:block;
+  }
+}
+
+@media(max-width:650px){
+  .topbar{
+    min-height:58px;
     height:58px;
+    padding:0 10px;
   }
 
-  .scene{
-    padding:12px;
+  .room-name{
+    max-width:130px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
   }
 
-  .messages{
-    padding:12px;
+  .topbar .btn{
+    padding:8px 9px;
+    font-size:12px;
   }
 
-  .composer{
-    padding:9px;
-  }
-
-  .controls .hide-mobile{
+  .status{
     display:none;
   }
 
-  .brand{
-    font-size:18px;
+  .chat{
+    padding:14px 10px;
+  }
+
+  .message{
+    margin-bottom:12px;
+  }
+
+  .message-body{
+    max-width:90%;
+    padding:10px 12px;
+  }
+
+  .composer{
+    padding:8px 9px calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .composer textarea{
+    min-height:44px;
+  }
+
+  .send{
+    padding:8px 11px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .template-grid{
+    grid-template-columns:1fr;
+  }
+
+  .modal{
+    border-radius:15px;
+    padding:14px;
+    max-height:96vh;
   }
 }
 </style>
@@ -415,199 +632,317 @@ button{
 
 <div class="app">
 
-<header class="top">
-  <div class="brand">
-    Persona<span>Lab</span>
-  </div>
+  <!-- DESKTOP CHARACTER SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>PersonaLab 🧠</h1>
+      <p>Social personality simulation</p>
+    </div>
 
-  <div class="top-actions">
-    <button class="iconbtn" id="saveBtn">💾 Save</button>
-    <button class="iconbtn" id="settingsBtn">⚙️</button>
-  </div>
-</header>
+    <div class="sidebar-title">Characters</div>
 
+    <div id="desktopCharacterList" class="character-list"></div>
 
-<div class="layout">
+    <button class="btn primary add-character" onclick="openCharacterCreator()">
+      ＋ Add Character
+    </button>
+  </aside>
 
-<aside class="sidebar">
+  <!-- MAIN -->
+  <main class="main">
 
-  <div class="section-title">
-    Rooms
-  </div>
+    <header class="topbar">
 
-  <button class="room active" data-room="Main Room">
-    🛋️ <span>Main Room</span>
-  </button>
+      <div class="topbar-left">
 
-  <button class="room" data-room="Kitchen">
-    🍳 <span>Kitchen</span>
-  </button>
+        <button class="btn mobile-only" onclick="openCharacterDrawer()">
+          👥 Characters
+        </button>
 
-  <button class="room" data-room="Outside">
-    🌳 <span>Outside</span>
-  </button>
+        <div>
+          <div class="room-name" id="roomName">Main Room</div>
+          <div class="status" id="simulationStatus">Paused</div>
+        </div>
 
-  <button class="room" data-room="Study">
-    📚 <span>Study</span>
-  </button>
+      </div>
 
+      <div class="topbar-right">
 
-  <div class="section-title" style="margin-top:18px">
-    Characters
-  </div>
+        <button class="btn" onclick="toggleSimulation()" id="simulationButton">
+          ▶ Start
+        </button>
 
-  <div id="characterList"></div>
+        <button class="btn" onclick="openDirector()">
+          🎬 Director
+        </button>
 
-  <button
-    class="btn"
-    id="addCharacter"
-    style="width:100%;margin-top:8px"
-  >
-    ＋ Character
-  </button>
+        <button class="btn" onclick="openSettings()">
+          ⚙️
+        </button>
 
-</aside>
+      </div>
 
+    </header>
 
-<main class="main">
+    <section id="chat" class="chat">
+      <div class="empty">
+        <div class="empty-inner">
+          <h2>Welcome to PersonaLab 👋</h2>
+          <p>
+            Create a group, pick a character, and start talking.
+            Characters have their own personalities, memories,
+            emotions, relationships and opinions.
+          </p>
+        </div>
+      </div>
+    </section>
 
-  <div class="scene">
+    <div class="composer">
+      <div class="composer-inner">
 
-    <div>
-      <h1 id="roomTitle">Main Room</h1>
+        <textarea
+          id="messageInput"
+          placeholder="Say something..."
+          rows="1"
+          onkeydown="handleComposerKey(event)"
+        ></textarea>
 
-      <div class="status" id="simStatus">
-        ● Simulation paused
+        <button class="btn primary send" onclick="sendMessage()">
+          Send
+        </button>
+
       </div>
     </div>
 
-    <div class="controls">
+  </main>
 
-      <button class="btn primary" id="toggleSim">
-        ▶ Start
-      </button>
+  <!-- DESKTOP INFO PANEL -->
+  <aside class="rightbar">
 
-      <button class="btn" id="directorBtn">
-        🎬 Director
-      </button>
+    <div class="panel">
+      <h3>Simulation</h3>
 
-      <button class="btn" id="clearBtn">
-        Clear
-      </button>
+      <div class="stat">
+        <span>Status</span>
+        <span id="sideStatus">Paused</span>
+      </div>
 
+      <div class="stat">
+        <span>Room</span>
+        <span id="sideRoom">Main Room</span>
+      </div>
+
+      <div class="stat">
+        <span>Characters</span>
+        <span id="sideCount">0</span>
+      </div>
     </div>
 
-  </div>
-
-
-  <div class="messages" id="messages"></div>
-
-
-  <div class="typing" id="typing">
-    Characters are thinking…
-  </div>
-
-
-  <div class="composer">
-
-    <div class="compose-row">
-
-      <textarea
-        id="input"
-        placeholder="Talk to the room…"
-      ></textarea>
-
-      <button class="send" id="send">
-        ➤
-      </button>
-
+    <div class="panel">
+      <h3>Selected Character</h3>
+      <div id="selectedCharacterInfo">
+        Nobody selected
+      </div>
     </div>
 
-    <div class="small" style="margin-top:6px">
-      Enter to send · Shift+Enter for a new line
-    </div>
+  </aside>
 
-  </div>
-
-</main>
-
-
-<aside class="rightbar">
-
-  <div class="panel">
-
-    <h3>
-      Simulation
-    </h3>
-
-    <div class="stat">
-      <span>Room</span>
-      <b id="sideRoom">Main Room</b>
-    </div>
-
-    <div class="stat">
-      <span>Characters</span>
-      <b id="charCount">0</b>
-    </div>
-
-    <div class="stat">
-      <span>Messages</span>
-      <b id="msgCount">0</b>
-    </div>
-
-  </div>
-
-
-  <div class="panel">
-
-    <h3>
-      Selected character
-    </h3>
-
-    <div id="selectedInfo" class="small">
-      Select a character to inspect them.
-    </div>
-
-  </div>
-
-
-  <div class="panel">
-
-    <h3>
-      Traits
-    </h3>
-
-    <div id="traits">
-      <span class="small">
-        No character selected.
-      </span>
-    </div>
-
-  </div>
-
-</aside>
-
-</div>
 </div>
 
 
-<div class="modal" id="modal">
+<!-- MOBILE CHARACTER DRAWER -->
 
-  <div class="modal-card">
+<div id="characterDrawer" class="drawer">
 
-    <h2 id="modalTitle">
-      Settings
-    </h2>
+  <div class="drawer-backdrop" onclick="closeCharacterDrawer()"></div>
 
-    <div id="modalBody"></div>
+  <div class="drawer-panel">
+
+    <div class="drawer-header">
+      <h2>Characters 👥</h2>
+      <button class="close" onclick="closeCharacterDrawer()">×</button>
+    </div>
+
+    <div id="mobileCharacterList"></div>
+
+    <button class="btn primary full" onclick="openCharacterCreator(); closeCharacterDrawer();">
+      ＋ Create Character
+    </button>
+
+    <button class="btn full" style="margin-top:8px" onclick="openTemplates(); closeCharacterDrawer();">
+      📋 Character Templates
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- CHARACTER EDITOR -->
+
+<div id="characterModal" class="overlay">
+
+  <div class="modal">
+
+    <div class="modal-header">
+      <h2 id="characterModalTitle">Create Character</h2>
+      <button class="close" onclick="closeCharacterModal()">×</button>
+    </div>
+
+    <input type="hidden" id="editingCharacterId">
+
+    <div class="form-grid">
+
+      <div class="field">
+        <label>Name</label>
+        <input id="charName" placeholder="e.g. Alex">
+      </div>
+
+      <div class="field">
+        <label>Avatar emoji</label>
+        <input id="charAvatar" placeholder="🙂" maxlength="4">
+      </div>
+
+    </div>
+
+    <div class="form-grid">
+
+      <div class="field">
+        <label>Personality</label>
+        <textarea id="charPersonality" placeholder="Describe who they are..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Speech style</label>
+        <textarea id="charSpeech" placeholder="How do they actually talk?"></textarea>
+      </div>
+
+    </div>
+
+    <div class="field">
+      <label>Traits</label>
+      <input id="charTraits" placeholder="funny, stubborn, curious, competitive">
+    </div>
+
+    <div class="form-grid">
+
+      <div class="field">
+        <label>Current emotion</label>
+        <input id="charEmotion" placeholder="calm, annoyed, excited...">
+      </div>
+
+      <div class="field">
+        <label>Goals</label>
+        <input id="charGoals" placeholder="What do they want right now?">
+      </div>
+
+    </div>
+
+    <div class="field">
+      <label>Memories</label>
+      <textarea id="charMemories" placeholder="Things this character remembers..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Relationships</label>
+      <textarea id="charRelationships" placeholder="Friends, rivals, family, crushes, dislikes..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Room</label>
+
+      <select id="charRoom">
+        <option>Main Room</option>
+        <option>Kitchen</option>
+        <option>Outside</option>
+        <option>Study</option>
+        <option>Bedroom</option>
+        <option>Living Room</option>
+      </select>
+
+    </div>
 
     <div class="modal-actions">
 
-      <button class="btn" id="modalClose">
-        Close
+      <button
+        id="deleteCharacterButton"
+        class="btn danger"
+        onclick="deleteEditingCharacter()"
+        style="display:none"
+      >
+        Delete
       </button>
 
-      <button class="btn primary" id="modalSave">
+      <button class="btn" onclick="closeCharacterModal()">
+        Cancel
+      </button>
+
+      <button class="btn primary" onclick="saveCharacter()">
+        Save Character
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- TEMPLATES -->
+
+<div id="templateModal" class="overlay">
+
+  <div class="modal">
+
+    <div class="modal-header">
+      <h2>Character Templates 📋</h2>
+      <button class="close" onclick="closeTemplates()">×</button>
+    </div>
+
+    <p style="color:#8991a2;font-size:13px">
+      Add a template, then customize them however you want.
+    </p>
+
+    <div id="templateGrid" class="template-grid"></div>
+
+  </div>
+
+</div>
+
+
+<!-- SETTINGS -->
+
+<div id="settingsModal" class="overlay">
+
+  <div class="modal small">
+
+    <div class="modal-header">
+      <h2>Settings ⚙️</h2>
+      <button class="close" onclick="closeSettings()">×</button>
+    </div>
+
+    <div class="field">
+
+      <label>Cloudflare Worker URL</label>
+
+      <input
+        id="workerUrl"
+        placeholder="https://your-worker.your-subdomain.workers.dev"
+      >
+
+      <small style="display:block;color:#727b8d;margin-top:6px">
+        This is only your Worker URL. Never put your Cloudflare API token here.
+      </small>
+
+    </div>
+
+    <div class="modal-actions">
+
+      <button class="btn" onclick="closeSettings()">
+        Cancel
+      </button>
+
+      <button class="btn primary" onclick="saveSettings()">
         Save
       </button>
 
@@ -618,952 +953,1766 @@ button{
 </div>
 
 
-<script>
+<!-- DIRECTOR -->
 
-const KEY = "personala_lab_v1";
+<div id="directorModal" class="overlay">
 
+  <div class="modal small">
 
-const state = {
-
-  room:"Main Room",
-
-  running:false,
-
-  selected:null,
-
-  apiUrl:"",
-
-  characters:[
-
-    {
-      id:"ava",
-      name:"Ava",
-      emoji:"🧠",
-      personality:"curious, thoughtful, observant",
-      traits:["Curious","Calm","Analytical"],
-      emotion:"Neutral",
-      memory:[]
-    },
-
-    {
-      id:"milo",
-      name:"Milo",
-      emoji:"⚡",
-      personality:"energetic, funny, impulsive",
-      traits:["Funny","Energetic","Bold"],
-      emotion:"Happy",
-      memory:[]
-    },
-
-    {
-      id:"zoe",
-      name:"Zoe",
-      emoji:"🎨",
-      personality:"creative, expressive, independent",
-      traits:["Creative","Expressive","Independent"],
-      emotion:"Curious",
-      memory:[]
-    }
-
-  ],
-
-  messages:[]
-
-};
-
-
-function save(){
-
-  localStorage.setItem(
-    KEY,
-    JSON.stringify(state)
-  );
-
-}
-
-
-function load(){
-
-  try{
-
-    const x =
-      JSON.parse(
-        localStorage.getItem(KEY)
-      );
-
-    if(x){
-
-      Object.assign(state,x);
-
-    }
-
-  }catch{}
-
-}
-
-
-function esc(s){
-
-  return String(s ?? "")
-    .replace(/[&<>"']/g,c=>({
-
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#039;"
-
-    }[c]));
-
-}
-
-
-function render(){
-
-  document.getElementById("roomTitle")
-    .textContent = state.room;
-
-  document.getElementById("sideRoom")
-    .textContent = state.room;
-
-  document.getElementById("charCount")
-    .textContent = state.characters.length;
-
-  document.getElementById("msgCount")
-    .textContent = state.messages.length;
-
-  document.getElementById("simStatus")
-    .textContent =
-      state.running
-        ? "● Simulation running"
-        : "● Simulation paused";
-
-  document.getElementById("toggleSim")
-    .textContent =
-      state.running
-        ? "⏸ Pause"
-        : "▶ Start";
-
-
-  const list =
-    document.getElementById(
-      "characterList"
-    );
-
-
-  list.innerHTML =
-    state.characters.map(c => `
-
-      <button
-        class="char"
-        data-id="${c.id}"
-      >
-
-        <span class="avatar">
-          ${esc(c.emoji)}
-        </span>
-
-        <span>
-
-          <b>${esc(c.name)}</b>
-
-          <br>
-
-          <span class="small">
-            ${esc(c.emotion)}
-          </span>
-
-        </span>
-
-      </button>
-
-    `).join("");
-
-
-  list
-    .querySelectorAll(".char")
-    .forEach(b => {
-
-      b.onclick = () =>
-        selectChar(b.dataset.id);
-
-    });
-
-
-  const m =
-    document.getElementById("messages");
-
-
-  if(state.messages.length){
-
-    m.innerHTML =
-      state.messages.map(x => `
-
-        <div class="msg ${x.role==="user"?"user":""}">
-
-          <div class="avatar">
-            ${esc(x.emoji || "💬")}
-          </div>
-
-          <div class="bubble">
-
-            <div class="name">
-              ${esc(x.name || "You")}
-            </div>
-
-            ${esc(x.content)
-              .replace(/\n/g,"<br>")}
-
-          </div>
-
-        </div>
-
-      `).join("");
-
-  }else{
-
-    m.innerHTML = `
-
-      <div class="empty">
-
-        <div style="font-size:42px">
-          🧪
-        </div>
-
-        <h2>
-          PersonaLab is ready
-        </h2>
-
-        <p>
-          Create a scene, start the simulation,
-          and talk to the characters.
-        </p>
-
-      </div>
-
-    `;
-
-  }
-
-
-  m.scrollTop =
-    m.scrollHeight;
-
-}
-
-
-function selectChar(id){
-
-  state.selected = id;
-
-  const c =
-    state.characters.find(
-      x => x.id === id
-    );
-
-  if(!c) return;
-
-
-  document.getElementById(
-    "selectedInfo"
-  ).innerHTML = `
-
-    <b>
-      ${esc(c.emoji)}
-      ${esc(c.name)}
-    </b>
-
-    <br>
-
-    <span class="small">
-      ${esc(c.personality)}
-    </span>
-
-    <br><br>
-
-    Emotion:
-    <b>${esc(c.emotion)}</b>
-
-  `;
-
-
-  document.getElementById(
-    "traits"
-  ).innerHTML =
-    c.traits
-      .map(t =>
-        `<span class="pill">
-          ${esc(t)}
-        </span>`
-      )
-      .join("");
-
-}
-
-
-async function send(){
-
-  const input =
-    document.getElementById("input");
-
-  const text =
-    input.value.trim();
-
-  if(!text) return;
-
-
-  state.messages.push({
-
-    role:"user",
-    name:"You",
-    emoji:"👤",
-    content:text
-
-  });
-
-
-  input.value = "";
-
-  render();
-
-  save();
-
-
-  if(!state.running){
-
-    return;
-
-  }
-
-
-  await aiReply(text);
-
-}
-
-
-async function aiReply(userText){
-
-  const typing =
-    document.getElementById("typing");
-
-  typing.style.display = "block";
-
-
-  try{
-
-    if(!state.apiUrl){
-
-      throw new Error("NO_API");
-
-    }
-
-
-    const messages = [
-
-      {
-        role:"system",
-        content:buildContext()
-      },
-
-      ...state.messages
-        .slice(-40)
-        .map(m => ({
-          role:m.role,
-          content:m.content
-        }))
-
-    ];
-
-
-    const response =
-      await fetch(
-
-        state.apiUrl,
-
-        {
-
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-            messages
-          })
-
-        }
-
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if(!response.ok){
-
-      throw new Error(
-        data.error ||
-        "AI request failed"
-      );
-
-    }
-
-
-    const content =
-      data.message ||
-      data.messages?.[0]?.content;
-
-
-    if(!content){
-
-      throw new Error(
-        "AI returned no content"
-      );
-
-    }
-
-
-    state.messages.push({
-
-      role:"assistant",
-
-      name:"PersonaLab",
-
-      emoji:"🤖",
-
-      content
-
-    });
-
-
-  }catch(e){
-
-    const c =
-      chooseCharacter(userText);
-
-
-    state.messages.push({
-
-      role:"assistant",
-
-      name:c.name,
-
-      emoji:c.emoji,
-
-      content:
-        localReply(c,userText)
-
-    });
-
-  }finally{
-
-    typing.style.display = "none";
-
-    render();
-
-    save();
-
-  }
-
-}
-
-
-function buildContext(){
-
-  return `
-
-PersonaLab social personality simulation.
-
-Current room:
-${state.room}
-
-Characters:
-
-${state.characters.map(c => `
-
-Name: ${c.name}
-
-Personality:
-${c.personality}
-
-Traits:
-${c.traits.join(", ")}
-
-Current emotion:
-${c.emotion}
-
-Memories:
-${c.memory.join(" | ")}
-
-`).join("\n")}
-
-Respond naturally as the simulation.
-
-Characters should have different personalities,
-opinions, emotions, relationships and reactions.
-
-Do not force every character to speak.
-
-Sometimes one character responds.
-
-Sometimes several characters respond.
-
-Sometimes nobody has anything useful to say.
-
-Characters can disagree, joke, interrupt,
-ask questions, ignore things, or change topics.
-
-Keep their personalities consistent.
-
-Characters only know information they have learned.
-
-The user should be able to interact naturally
-with the characters.
-
-`;
-
-
-}
-
-
-function chooseCharacter(){
-
-  if(!state.characters.length){
-
-    return {
-      name:"PersonaLab",
-      emoji:"🤖"
-    };
-
-  }
-
-
-  return state.characters[
-    Math.floor(
-      Math.random() *
-      state.characters.length
-    )
-  ];
-
-}
-
-
-function localReply(c,t){
-
-  return `${c.name} looks thoughtful.
-
-“I heard you. ${
-    t.length > 80
-      ? "That gives me a lot to think about."
-      : "What do you mean by that?"
-  }”`;
-
-}
-
-
-function addCharacter(){
-
-  openModal(
-
-    "Create character",
-
-    `
+    <div class="modal-header">
+      <h2>Director 🎬</h2>
+      <button class="close" onclick="closeDirector()">×</button>
+    </div>
 
     <div class="field">
 
-      <label>Name</label>
+      <label>Room</label>
 
-      <input
-        id="fName"
-        placeholder="Character name"
-      >
+      <select id="directorRoom" onchange="changeRoom()">
+        <option>Main Room</option>
+        <option>Kitchen</option>
+        <option>Outside</option>
+        <option>Study</option>
+        <option>Bedroom</option>
+        <option>Living Room</option>
+      </select>
 
     </div>
 
-
     <div class="field">
 
-      <label>Emoji</label>
-
-      <input
-        id="fEmoji"
-        value="🙂"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Personality</label>
+      <label>Simulation instruction</label>
 
       <textarea
-        id="fPersonality"
-        placeholder="e.g. sarcastic, loyal, shy"
+        id="directorInstruction"
+        placeholder="Example: Everyone is hanging out after school."
       ></textarea>
 
     </div>
 
+    <div class="modal-actions">
 
-    <div class="field">
+      <button class="btn" onclick="closeDirector()">
+        Close
+      </button>
 
-      <label>
-        Traits, separated by commas
-      </label>
-
-      <input
-        id="fTraits"
-        placeholder="Funny, Loyal, Shy"
-      >
+      <button class="btn primary" onclick="runDirectorEvent()">
+        Run Event
+      </button>
 
     </div>
 
-    `,
+  </div>
 
-    () => {
-
-      const name =
-        document
-          .getElementById("fName")
-          .value
-          .trim();
+</div>
 
 
-      if(!name) return;
+<div id="toast" class="toast"></div>
 
 
-      state.characters.push({
+<script>
 
-        id:
-          crypto.randomUUID(),
+/* =========================================================
+   PERSONA DATA
+========================================================= */
 
-        name,
+const STORAGE_KEY = "personalab_characters_v3";
+const CHAT_KEY = "personalab_chat_v3";
+const SETTINGS_KEY = "personalab_settings_v3";
+const ROOM_KEY = "personalab_room_v3";
 
-        emoji:
-          document
-            .getElementById("fEmoji")
-            .value ||
-          "🙂",
+const starterCharacters = [
 
-        personality:
-          document
-            .getElementById("fPersonality")
-            .value ||
-          "friendly",
+  {
+    id: crypto.randomUUID(),
+    name:"Maya",
+    avatar:"🎧",
+    personality:"Creative, observant, independent and a little sarcastic. She likes people but gets drained by large groups. She notices small details and doesn't pretend to like things just because everyone else does.",
+    speech:"Casual and natural. Uses short sentences, occasional sarcasm and modern slang when it fits. She does not constantly joke.",
+    traits:["creative","observant","independent","sarcastic"],
+    emotion:"calm",
+    goals:"Have a good day without being dragged into unnecessary drama.",
+    memories:"She remembers conversations that matter to her and small embarrassing moments.",
+    relationships:"Gets along with people who are genuine. Finds overly fake behavior annoying.",
+    room:"Main Room"
+  },
 
-        traits:
-          document
-            .getElementById("fTraits")
-            .value
-            .split(",")
-            .map(x=>x.trim())
-            .filter(Boolean),
+  {
+    id: crypto.randomUUID(),
+    name:"Jayden",
+    avatar:"🏀",
+    personality:"Confident, energetic and competitive. He likes hanging out with people and can get carried away when something interests him. He isn't naturally serious all the time.",
+    speech:"Relaxed, conversational and energetic. Uses slang sometimes. Can tease friends but does not speak like a formal assistant.",
+    traits:["confident","competitive","social","energetic"],
+    emotion:"energetic",
+    goals:"Have fun and prove himself when something turns competitive.",
+    memories:"Remembers jokes, arguments and things people have challenged him about.",
+    relationships:"Likes people who can joke around. Can clash with people who constantly challenge him.",
+    room:"Main Room"
+  },
 
-        emotion:"Neutral",
+  {
+    id: crypto.randomUUID(),
+    name:"Noah",
+    avatar:"📚",
+    personality:"Quiet, thoughtful and curious. He enjoys learning about random things but doesn't automatically enjoy school. He prefers interesting conversations over forced small talk.",
+    speech:"Usually short and understated. Sometimes gives surprisingly detailed answers when something interests him. Rarely uses exaggerated enthusiasm.",
+    traits:["quiet","curious","thoughtful","reserved"],
+    emotion:"neutral",
+    goals:"Find something interesting to focus on.",
+    memories:"Keeps track of useful facts and meaningful conversations.",
+    relationships:"Comfortable around people who don't pressure him to talk.",
+    room:"Study"
+  },
 
-        memory:[]
+  {
+    id: crypto.randomUUID(),
+    name:"Riley",
+    avatar:"😂",
+    personality:"Funny, spontaneous and easily bored. Loves making people laugh and occasionally says something ridiculous just to see how people react. Can become serious when a friend genuinely needs help.",
+    speech:"Fast, casual and playful. Uses jokes, exaggeration and internet slang naturally, but doesn't turn every sentence into a joke.",
+    traits:["funny","spontaneous","playful","loyal"],
+    emotion:"playful",
+    goals:"Have fun and keep things from becoming painfully boring.",
+    memories:"Remembers funny moments and inside jokes.",
+    relationships:"Usually gets along with people who can take a joke.",
+    room:"Living Room"
+  },
 
-      });
+  {
+    id: crypto.randomUUID(),
+    name:"Sofia",
+    avatar:"🎨",
+    personality:"Friendly but opinionated. She cares about her friends and isn't afraid to disagree. She likes art, music and creative projects but has plenty of interests outside of school.",
+    speech:"Warm and conversational. She explains herself when she disagrees instead of becoming robotic or overly formal.",
+    traits:["friendly","opinionated","creative","loyal"],
+    emotion:"content",
+    goals:"Spend time with people she actually enjoys being around.",
+    memories:"Remembers friendships, disagreements and personal promises.",
+    relationships:"Protective of close friends. Doesn't like people who constantly talk over others.",
+    room:"Kitchen"
+  },
+
+  {
+    id: crypto.randomUUID(),
+    name:"Ethan",
+    avatar:"🎮",
+    personality:"Laid-back, competitive about games and occasionally lazy. He can be surprisingly perceptive even though he doesn't always look like he's paying attention.",
+    speech:"Very casual. Uses short sentences, slang and dry humor. Doesn't give huge speeches unless something really interests him.",
+    traits:["laid-back","competitive","dry-humor","observant"],
+    emotion:"relaxed",
+    goals:"Relax and do something he actually enjoys.",
+    memories:"Remembers games, rivalries and funny things friends have done.",
+    relationships:"Gets along with people who don't take everything too seriously.",
+    room:"Living Room"
+  }
+
+];
 
 
-      save();
+/* =========================================================
+   TEMPLATE CHARACTERS
+========================================================= */
 
-      render();
+const templates = [
+
+  {
+    name:"The Quiet One",
+    avatar:"🌙",
+    personality:"Reserved, observant and private. They don't talk just because there is silence. They speak when they have something worth saying.",
+    speech:"Short, calm responses. Sometimes pauses or says very little.",
+    traits:["quiet","observant","private"],
+    emotion:"neutral",
+    goals:"Stay comfortable and avoid unnecessary drama.",
+    memories:"",
+    relationships:""
+  },
+
+  {
+    name:"The Chaos Friend",
+    avatar:"💀",
+    personality:"Spontaneous, funny and unpredictable. Loves turning ordinary situations into jokes.",
+    speech:"Very casual, playful and sometimes ridiculous. Uses slang naturally.",
+    traits:["funny","chaotic","spontaneous"],
+    emotion:"amused",
+    goals:"Have fun.",
+    memories:"",
+    relationships:""
+  },
+
+  {
+    name:"The Competitive One",
+    avatar:"🏆",
+    personality:"Competitive and confident. Turns surprisingly ordinary things into challenges.",
+    speech:"Direct, energetic and sometimes teasing.",
+    traits:["competitive","confident","determined"],
+    emotion:"motivated",
+    goals:"Win when something becomes competitive.",
+    memories:"",
+    relationships:""
+  },
+
+  {
+    name:"The Chill One",
+    avatar:"😎",
+    personality:"Laid-back and difficult to stress out. Doesn't care about impressing people.",
+    speech:"Relaxed, short and casual.",
+    traits:["calm","laid-back","independent"],
+    emotion:"relaxed",
+    goals:"Have a peaceful day.",
+    memories:"",
+    relationships:""
+  },
+
+  {
+    name:"The Debater",
+    avatar:"🗣️",
+    personality:"Opinionated and curious. Enjoys discussing ideas and doesn't automatically agree with people.",
+    speech:"Clear and direct. Will explain their reasoning when challenged.",
+    traits:["opinionated","curious","logical"],
+    emotion:"interested",
+    goals:"Understand what people actually think.",
+    memories:"",
+    relationships:""
+  },
+
+  {
+    name:"The Social Butterfly",
+    avatar:"🦋",
+    personality:"Outgoing, friendly and curious about other people. Enjoys meeting people but still has personal opinions and boundaries.",
+    speech:"Energetic and conversational. Asks questions naturally.",
+    traits:["social","friendly","curious"],
+    emotion:"happy",
+    goals:"Spend time with people and discover what's happening.",
+    memories:"",
+    relationships:""
+  },
+
+  {
+    name:"The Easily Annoyed One",
+    avatar:"😑",
+    personality:"Blunt, easily irritated and honest about it. They aren't evil or constantly angry, they just have a low tolerance for annoying behavior.",
+    speech:"Short, blunt and dry.",
+    traits:["blunt","impatient","honest"],
+    emotion:"neutral",
+    goals:"Get through the day without unnecessary nonsense.",
+    memories:"",
+    relationships:""
+  },
+
+  {
+    name:"The Creative",
+    avatar:"🎨",
+    personality:"Imaginative and easily distracted by interesting ideas. Likes art, music, stories and unusual concepts.",
+    speech:"Expressive but still conversational. Gets more talkative when discussing creative things.",
+    traits:["creative","imaginative","curious"],
+    emotion:"inspired",
+    goals:"Make or discover something interesting.",
+    memories:"",
+    relationships:""
+  }
+
+];
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let characters = loadCharacters();
+let chatHistory = loadChat();
+let settings = loadSettings();
+
+let selectedCharacterId = characters[0]?.id || null;
+let currentRoom = localStorage.getItem(ROOM_KEY) || "Main Room";
+let simulationRunning = false;
+let aiBusy = false;
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+function loadCharacters(){
+
+  try{
+
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+    if(Array.isArray(saved) && saved.length){
+      return saved;
+    }
+
+  }catch(e){}
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(starterCharacters)
+  );
+
+  return starterCharacters;
+}
+
+function saveCharacters(){
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(characters)
+  );
+}
+
+function loadChat(){
+
+  try{
+
+    const saved = JSON.parse(localStorage.getItem(CHAT_KEY));
+
+    if(Array.isArray(saved)){
+      return saved;
+    }
+
+  }catch(e){}
+
+  return [];
+}
+
+function saveChat(){
+  localStorage.setItem(
+    CHAT_KEY,
+    JSON.stringify(chatHistory.slice(-150))
+  );
+}
+
+function loadSettings(){
+
+  try{
+    return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {
+      workerUrl:""
+    };
+  }catch(e){
+    return {workerUrl:""};
+  }
+}
+
+
+/* =========================================================
+   UI
+========================================================= */
+
+function renderAll(){
+
+  renderCharacters();
+  renderChat();
+  renderSelectedCharacter();
+  updateSimulationUI();
+  updateRoomUI();
+}
+
+function renderCharacters(){
+
+  const desktop = document.getElementById("desktopCharacterList");
+  const mobile = document.getElementById("mobileCharacterList");
+
+  desktop.innerHTML = "";
+  mobile.innerHTML = "";
+
+  characters.forEach(character => {
+
+    desktop.appendChild(
+      createCharacterCard(character)
+    );
+
+    mobile.appendChild(
+      createCharacterCard(character)
+    );
+
+  });
+
+}
+
+function createCharacterCard(character){
+
+  const button = document.createElement("button");
+
+  button.className =
+    "character-card" +
+    (character.id === selectedCharacterId ? " active" : "");
+
+  button.innerHTML = `
+    <div class="avatar">${escapeHtml(character.avatar || "🙂")}</div>
+    <div style="min-width:0">
+      <strong>${escapeHtml(character.name)}</strong>
+      <small>${escapeHtml(character.emotion || "neutral")} · ${escapeHtml(character.room || "Main Room")}</small>
+    </div>
+  `;
+
+  button.onclick = () => {
+
+    selectedCharacterId = character.id;
+
+    renderAll();
+
+    closeCharacterDrawer();
+
+    showToast(
+      `Talking to ${character.name}`
+    );
+
+  };
+
+  button.ondblclick = () => {
+    openCharacterEditor(character.id);
+  };
+
+  return button;
+}
+
+
+/* =========================================================
+   CHAT
+========================================================= */
+
+function renderChat(){
+
+  const chat = document.getElementById("chat");
+
+  if(!chatHistory.length){
+
+    chat.innerHTML = `
+      <div class="empty">
+        <div class="empty-inner">
+          <h2>Welcome to PersonaLab 👋</h2>
+          <p>
+            You're part of the group too.
+            Say something and the characters can actually respond.
+          </p>
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  chat.innerHTML = "";
+
+  chatHistory.forEach(message => {
+
+    const row = document.createElement("div");
+
+    row.className =
+      "message " +
+      (message.role === "user" ? "user" : "");
+
+    const body = document.createElement("div");
+
+    body.className = "message-body";
+
+    const name =
+      message.role === "user"
+        ? "You"
+        : message.name || "PersonaLab";
+
+    body.innerHTML = `
+      <div class="message-name">${escapeHtml(name)}</div>
+      <div class="message-text">${escapeHtml(message.content)}</div>
+      ${
+        message.meta
+          ? `<div class="message-meta">${escapeHtml(message.meta)}</div>`
+          : ""
+      }
+    `;
+
+    row.appendChild(body);
+    chat.appendChild(row);
+
+  });
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function addMessage(role, content, name="", meta=""){
+
+  if(!content || !content.trim()) return;
+
+  chatHistory.push({
+    role,
+    content:content.trim(),
+    name,
+    meta,
+    timestamp:Date.now()
+  });
+
+  saveChat();
+  renderChat();
+}
+
+
+/* =========================================================
+   USER TALKING
+========================================================= */
+
+async function sendMessage(){
+
+  if(aiBusy) return;
+
+  const input =
+    document.getElementById("messageInput");
+
+  const text = input.value.trim();
+
+  if(!text) return;
+
+  input.value = "";
+  resizeTextarea(input);
+
+  addMessage(
+    "user",
+    text,
+    "You"
+  );
+
+  /*
+    IMPORTANT:
+    This flag tells the AI that the user is an actual
+    participant and should not be ignored.
+  */
+
+  await askAI({
+    type:"user_message",
+    userText:text
+  });
+}
+
+
+/* =========================================================
+   AI REQUEST
+========================================================= */
+
+async function askAI(context){
+
+  aiBusy = true;
+
+  const workerUrl =
+    (settings.workerUrl || "").trim();
+
+  const recentChat =
+    chatHistory.slice(-45);
+
+  const characterContext =
+    buildCharacterContext();
+
+  const selected =
+    characters.find(
+      c => c.id === selectedCharacterId
+    );
+
+  const selectedInstruction =
+    selected
+      ? `
+The user is currently talking most directly to ${selected.name}.
+${selected.name} should be given a genuine chance to respond.
+`
+      : `
+The user is talking to the group.
+Choose naturally which character(s) would respond.
+`;
+
+  const userInstruction =
+    context.type === "user_message"
+      ? `
+USER JUST SPOKE:
+"${context.userText}"
+
+The user is a real participant in this simulation.
+Do NOT ghost the user.
+
+At least one relevant character should respond to this message unless
+there is an extremely strong contextual reason not to.
+If the message clearly addresses a particular character,
+prioritize that character.
+
+Do not make every character respond.
+Do not make everyone agree.
+Respond naturally to what the user actually said.
+`
+      : `
+A simulation event is happening.
+Characters may react naturally.
+Do not force everyone to speak.
+`;
+
+  const systemPrompt = `
+
+You are the conversation engine for PersonaLab.
+
+This is a fictional social simulation.
+
+CRITICAL HUMAN-LIKE BEHAVIOR:
+
+Characters are NOT chatbots taking turns.
+
+There is NO required speaking order.
+
+Do not do:
+Ava speaks.
+Milo speaks.
+Zoe speaks.
+Ava speaks.
+Milo speaks.
+
+Instead, decide naturally who would actually speak.
+
+Sometimes:
+- one character responds
+- two characters respond
+- several characters respond
+- someone interrupts
+- someone changes the subject
+- someone reacts to another person
+- someone stays quiet
+- nobody responds during an autonomous simulation moment
+
+The user is also a participant.
+
+NEVER routinely ignore the user.
+
+When the user directly says something:
+- understand what they actually said
+- decide which character would realistically react
+- have at least one relevant character respond
+- if the user addresses a specific character, that character gets priority
+- another character may also jump in if it makes sense
+
+PERSONALITY:
+
+Personality is NOT just a label.
+
+Actually change the dialogue based on:
+- personality
+- traits
+- speech style
+- emotion
+- goals
+- memories
+- relationships
+- current situation
+
+Characters must sound different from one another.
+
+Do NOT make everyone:
+- cheerful
+- polite
+- interested in school
+- supportive
+- enthusiastic
+- philosophical
+- perfectly articulate
+
+Characters can:
+- dislike school
+- love school
+- tolerate school
+- be bored
+- have hobbies unrelated to school
+- disagree
+- be awkward
+- be annoyed
+- joke
+- misunderstand something
+- change the subject
+- say they don't know
+- give short answers
+- be quiet
+
+Do not make characters sound like AI assistants.
+
+Avoid phrases like:
+"That's an interesting perspective."
+"I completely understand how you feel."
+"That sounds like a wonderful opportunity."
+"Let's explore that together."
+
+Use natural conversational language appropriate to each character.
+
+Speech should not be identical between characters.
+
+Characters should not mention being AI.
+
+CHARACTER KNOWLEDGE:
+
+Characters only know information they have learned,
+remembered, experienced, or were explicitly given.
+
+MEMORY:
+
+Use previous conversation when relevant.
+
+RELATIONSHIPS:
+
+Relationships affect reactions.
+
+Friends can tease each other.
+Rivals can disagree.
+People who barely know each other may be awkward.
+Close friends may understand references others don't.
+
+EMOTIONS:
+
+Emotion can change as the conversation develops.
+
+Do not reset everyone's emotion after every message.
+
+OUTPUT:
+
+When one character speaks:
+
+NAME: dialogue
+
+When several speak:
+
+NAME: dialogue
+NAME: dialogue
+
+Only include characters who actually speak.
+
+Do not create fake turns for silent characters.
+
+Do not narrate every tiny action.
+
+Keep normal conversation reasonably concise.
+
+${selectedInstruction}
+
+${userInstruction}
+
+CURRENT ROOM:
+${currentRoom}
+
+CHARACTERS:
+${characterContext}
+
+RECENT CONVERSATION:
+${recentChat
+  .map(m => {
+    const speaker =
+      m.role === "user"
+        ? "You"
+        : (m.name || "Unknown");
+
+    return `${speaker}: ${m.content}`;
+  })
+  .join("\n")
+}
+`;
+
+  try{
+
+    if(!workerUrl){
+
+      /*
+        Local fallback so the website still works before
+        the Cloudflare Worker is connected.
+      */
+
+      await localFallback(context);
+
+      aiBusy = false;
+
+      return;
+    }
+
+    const response = await fetch(
+      workerUrl,
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          messages:[
+            {
+              role:"system",
+              content:systemPrompt
+            },
+            ...recentChat.map(m => ({
+              role:m.role === "user"
+                ? "user"
+                : "assistant",
+              content:
+                m.role === "user"
+                  ? m.content
+                  : `${m.name || "Character"}: ${m.content}`
+            }))
+          ]
+        })
+      }
+    );
+
+    const raw =
+      await response.text();
+
+    let data;
+
+    try{
+      data = JSON.parse(raw);
+    }catch(e){
+
+      throw new Error(
+        "Worker returned invalid JSON."
+      );
+    }
+
+    if(!response.ok){
+
+      throw new Error(
+        data?.details
+          ? JSON.stringify(data.details)
+          : data?.error ||
+            `Worker error ${response.status}`
+      );
 
     }
 
+    const content =
+      data?.message ||
+      data?.choices?.[0]?.message?.content ||
+      data?.result?.response ||
+      "";
+
+    if(!content.trim()){
+
+      throw new Error(
+        "The Worker returned no AI message."
+      );
+
+    }
+
+    parseAIResponse(content);
+
+  }catch(error){
+
+    console.error(error);
+
+    showToast(
+      "AI connection failed. Check Settings → Cloudflare Worker URL."
+    );
+
+    await localFallback(context);
+
+  }finally{
+
+    aiBusy = false;
+
+  }
+}
+
+
+/* =========================================================
+   CHARACTER CONTEXT
+========================================================= */
+
+function buildCharacterContext(){
+
+  return characters
+    .filter(character =>
+      character.room === currentRoom ||
+      character.room === "Main Room"
+    )
+    .map(character => {
+
+      return `
+NAME: ${character.name}
+TRAITS: ${(character.traits || []).join(", ")}
+PERSONALITY: ${character.personality || ""}
+SPEECH STYLE: ${character.speech || ""}
+CURRENT EMOTION: ${character.emotion || "neutral"}
+GOALS: ${character.goals || ""}
+MEMORIES: ${character.memories || ""}
+RELATIONSHIPS: ${character.relationships || ""}
+ROOM: ${character.room || "Main Room"}
+`;
+    })
+    .join("\n");
+}
+
+
+/* =========================================================
+   AI RESPONSE PARSER
+========================================================= */
+
+function parseAIResponse(content){
+
+  /*
+    The Worker returns one AI message.
+    We split lines like:
+
+    Maya: ...
+    Jayden: ...
+
+    so the UI can show actual individual speakers.
+  */
+
+  const lines =
+    content
+      .split("\n")
+      .map(x => x.trim())
+      .filter(Boolean);
+
+  let foundSpeaker = false;
+
+  for(const line of lines){
+
+    const match =
+      line.match(/^([^:]{1,40}):\s*(.+)$/);
+
+    if(!match) continue;
+
+    const possibleName =
+      match[1].trim();
+
+    const dialogue =
+      match[2].trim();
+
+    const character =
+      characters.find(
+        c =>
+          c.name.toLowerCase() ===
+          possibleName.toLowerCase()
+      );
+
+    if(character){
+
+      foundSpeaker = true;
+
+      addMessage(
+        "assistant",
+        dialogue,
+        character.name,
+        character.emotion || ""
+      );
+
+    }
+
+  }
+
+  /*
+    If the model didn't use character labels,
+    don't lose its response.
+  */
+
+  if(!foundSpeaker){
+
+    const selected =
+      characters.find(
+        c => c.id === selectedCharacterId
+      );
+
+    addMessage(
+      "assistant",
+      content,
+      selected?.name || "PersonaLab"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   FALLBACK
+========================================================= */
+
+async function localFallback(context){
+
+  const selected =
+    characters.find(
+      c => c.id === selectedCharacterId
+    );
+
+  if(!selected){
+
+    addMessage(
+      "assistant",
+      "Pick a character first and I'll talk with you.",
+      "PersonaLab"
+    );
+
+    return;
+  }
+
+  let response = "";
+
+  const personality =
+    (selected.personality || "").toLowerCase();
+
+  if(
+    context.type === "user_message" &&
+    /funny|playful|chaotic|sarcastic/.test(personality)
+  ){
+
+    response =
+      `Okay, ${context.userText} is actually kinda wild 😭`;
+
+  }else if(
+    /quiet|reserved|calm/.test(personality)
+  ){
+
+    response =
+      `Yeah, I get what you mean.`;
+
+  }else if(
+    /competitive|confident/.test(personality)
+  ){
+
+    response =
+      `Alright, I'm listening. What's the point?`;
+
+  }else{
+
+    response =
+      `Yeah, I'm listening.`;
+
+  }
+
+  addMessage(
+    "assistant",
+    response,
+    selected.name
   );
 
 }
 
 
-function openModal(
-  title,
-  body,
-  saveFn
-){
+/* =========================================================
+   CHARACTER CREATION
+========================================================= */
+
+function openCharacterCreator(){
 
   document.getElementById(
-    "modalTitle"
-  ).textContent = title;
-
-
-  document.getElementById(
-    "modalBody"
-  ).innerHTML = body;
-
+    "characterModalTitle"
+  ).textContent = "Create Character";
 
   document.getElementById(
-    "modal"
+    "editingCharacterId"
+  ).value = "";
+
+  clearCharacterForm();
+
+  document.getElementById(
+    "deleteCharacterButton"
+  ).style.display = "none";
+
+  document.getElementById(
+    "characterModal"
   ).classList.add("open");
+}
 
+function openCharacterEditor(id){
+
+  const character =
+    characters.find(c => c.id === id);
+
+  if(!character) return;
 
   document.getElementById(
-    "modalSave"
-  ).onclick = () => {
+    "characterModalTitle"
+  ).textContent =
+    `Edit ${character.name}`;
 
-    saveFn?.();
+  document.getElementById(
+    "editingCharacterId"
+  ).value = character.id;
 
+  document.getElementById("charName").value =
+    character.name || "";
+
+  document.getElementById("charAvatar").value =
+    character.avatar || "";
+
+  document.getElementById("charPersonality").value =
+    character.personality || "";
+
+  document.getElementById("charSpeech").value =
+    character.speech || "";
+
+  document.getElementById("charTraits").value =
+    (character.traits || []).join(", ");
+
+  document.getElementById("charEmotion").value =
+    character.emotion || "";
+
+  document.getElementById("charGoals").value =
+    character.goals || "";
+
+  document.getElementById("charMemories").value =
+    character.memories || "";
+
+  document.getElementById("charRelationships").value =
+    character.relationships || "";
+
+  document.getElementById("charRoom").value =
+    character.room || "Main Room";
+
+  document.getElementById(
+    "deleteCharacterButton"
+  ).style.display = "block";
+
+  document.getElementById(
+    "characterModal"
+  ).classList.add("open");
+}
+
+function clearCharacterForm(){
+
+  [
+    "charName",
+    "charAvatar",
+    "charPersonality",
+    "charSpeech",
+    "charTraits",
+    "charEmotion",
+    "charGoals",
+    "charMemories",
+    "charRelationships"
+  ].forEach(id => {
+
+    document.getElementById(id).value = "";
+
+  });
+
+  document.getElementById(
+    "charRoom"
+  ).value = currentRoom;
+}
+
+function closeCharacterModal(){
+
+  document.getElementById(
+    "characterModal"
+  ).classList.remove("open");
+}
+
+function saveCharacter(){
+
+  const id =
     document.getElementById(
-      "modal"
-    ).classList.remove("open");
+      "editingCharacterId"
+    ).value;
+
+  const name =
+    document.getElementById("charName").value.trim();
+
+  if(!name){
+
+    showToast("Give the character a name first.");
+    return;
+
+  }
+
+  const data = {
+
+    name,
+
+    avatar:
+      document.getElementById("charAvatar").value.trim() ||
+      "🙂",
+
+    personality:
+      document.getElementById("charPersonality").value.trim(),
+
+    speech:
+      document.getElementById("charSpeech").value.trim(),
+
+    traits:
+      document.getElementById("charTraits").value
+        .split(",")
+        .map(x => x.trim())
+        .filter(Boolean),
+
+    emotion:
+      document.getElementById("charEmotion").value.trim() ||
+      "neutral",
+
+    goals:
+      document.getElementById("charGoals").value.trim(),
+
+    memories:
+      document.getElementById("charMemories").value.trim(),
+
+    relationships:
+      document.getElementById("charRelationships").value.trim(),
+
+    room:
+      document.getElementById("charRoom").value
 
   };
+
+  if(id){
+
+    const index =
+      characters.findIndex(
+        c => c.id === id
+      );
+
+    if(index !== -1){
+
+      characters[index] = {
+        ...characters[index],
+        ...data
+      };
+
+      selectedCharacterId = id;
+    }
+
+  }else{
+
+    const newCharacter = {
+      id:crypto.randomUUID(),
+      ...data
+    };
+
+    characters.push(newCharacter);
+
+    selectedCharacterId =
+      newCharacter.id;
+  }
+
+  saveCharacters();
+  closeCharacterModal();
+  renderAll();
+
+  showToast(
+    `${name} is now part of PersonaLab.`
+  );
+}
+
+function deleteEditingCharacter(){
+
+  const id =
+    document.getElementById(
+      "editingCharacterId"
+    ).value;
+
+  if(!id) return;
+
+  const character =
+    characters.find(
+      c => c.id === id
+    );
+
+  if(!character) return;
+
+  if(!confirm(
+    `Delete ${character.name}?`
+  )){
+    return;
+  }
+
+  characters =
+    characters.filter(
+      c => c.id !== id
+    );
+
+  selectedCharacterId =
+    characters[0]?.id || null;
+
+  saveCharacters();
+
+  closeCharacterModal();
+
+  renderAll();
+
+  showToast(
+    `${character.name} was removed.`
+  );
+}
+
+
+/* =========================================================
+   TEMPLATES
+========================================================= */
+
+function openTemplates(){
+
+  const grid =
+    document.getElementById(
+      "templateGrid"
+    );
+
+  grid.innerHTML = "";
+
+  templates.forEach((template,index) => {
+
+    const button =
+      document.createElement("button");
+
+    button.className = "template";
+
+    button.innerHTML = `
+      <div class="emoji">${escapeHtml(template.avatar)}</div>
+      <strong>${escapeHtml(template.name)}</strong>
+      <small>${escapeHtml(template.traits.join(" · "))}</small>
+    `;
+
+    button.onclick = () =>
+      addTemplate(index);
+
+    grid.appendChild(button);
+
+  });
+
+  document.getElementById(
+    "templateModal"
+  ).classList.add("open");
+}
+
+function addTemplate(index){
+
+  const template =
+    templates[index];
+
+  const character = {
+
+    id:crypto.randomUUID(),
+
+    name:template.name,
+
+    avatar:template.avatar,
+
+    personality:template.personality,
+
+    speech:template.speech,
+
+    traits:[...template.traits],
+
+    emotion:template.emotion,
+
+    goals:template.goals,
+
+    memories:template.memories,
+
+    relationships:template.relationships,
+
+    room:currentRoom
+
+  };
+
+  characters.push(character);
+
+  selectedCharacterId =
+    character.id;
+
+  saveCharacters();
+
+  closeTemplates();
+
+  renderAll();
+
+  showToast(
+    `${character.name} joined the simulation.`
+  );
+}
+
+function closeTemplates(){
+
+  document.getElementById(
+    "templateModal"
+  ).classList.remove("open");
+}
+
+
+/* =========================================================
+   MOBILE DRAWER
+========================================================= */
+
+function openCharacterDrawer(){
+
+  document.getElementById(
+    "characterDrawer"
+  ).classList.add("open");
+}
+
+function closeCharacterDrawer(){
+
+  document.getElementById(
+    "characterDrawer"
+  ).classList.remove("open");
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+function openSettings(){
+
+  document.getElementById(
+    "workerUrl"
+  ).value =
+    settings.workerUrl || "";
+
+  document.getElementById(
+    "settingsModal"
+  ).classList.add("open");
+}
+
+function closeSettings(){
+
+  document.getElementById(
+    "settingsModal"
+  ).classList.remove("open");
+}
+
+function saveSettings(){
+
+  settings.workerUrl =
+    document.getElementById(
+      "workerUrl"
+    ).value.trim();
+
+  localStorage.setItem(
+    SETTINGS_KEY,
+    JSON.stringify(settings)
+  );
+
+  closeSettings();
+
+  showToast(
+    "Settings saved."
+  );
+}
+
+
+/* =========================================================
+   DIRECTOR
+========================================================= */
+
+function openDirector(){
+
+  document.getElementById(
+    "directorRoom"
+  ).value = currentRoom;
+
+  document.getElementById(
+    "directorInstruction"
+  ).value = "";
+
+  document.getElementById(
+    "directorModal"
+  ).classList.add("open");
+}
+
+function closeDirector(){
+
+  document.getElementById(
+    "directorModal"
+  ).classList.remove("open");
+}
+
+function changeRoom(){
+
+  currentRoom =
+    document.getElementById(
+      "directorRoom"
+    ).value;
+
+  localStorage.setItem(
+    ROOM_KEY,
+    currentRoom
+  );
+
+  updateRoomUI();
+  renderAll();
+}
+
+async function runDirectorEvent(){
+
+  const instruction =
+    document.getElementById(
+      "directorInstruction"
+    ).value.trim();
+
+  closeDirector();
+
+  if(instruction){
+
+    addMessage(
+      "assistant",
+      `[Director: ${instruction}]`,
+      "🎬 Director"
+    );
+
+  }
+
+  await askAI({
+    type:"director_event"
+  });
+}
+
+
+/* =========================================================
+   SIMULATION
+========================================================= */
+
+function toggleSimulation(){
+
+  simulationRunning =
+    !simulationRunning;
+
+  updateSimulationUI();
+
+  if(simulationRunning){
+
+    showToast(
+      "Simulation started."
+    );
+
+    runAutonomousMoment();
+
+  }else{
+
+    showToast(
+      "Simulation paused."
+    );
+
+  }
+
+}
+
+function updateSimulationUI(){
+
+  const status =
+    simulationRunning
+      ? "Running"
+      : "Paused";
+
+  document.getElementById(
+    "simulationStatus"
+  ).textContent = status;
+
+  document.getElementById(
+    "sideStatus"
+  ).textContent = status;
+
+  document.getElementById(
+    "simulationButton"
+  ).textContent =
+    simulationRunning
+      ? "⏸ Pause"
+      : "▶ Start";
+
+  document.getElementById(
+    "sideCount"
+  ).textContent =
+    characters.length;
+}
+
+async function runAutonomousMoment(){
+
+  if(!simulationRunning || aiBusy){
+    return;
+  }
+
+  /*
+    Autonomous moments are intentionally less frequent.
+    They do NOT force every character to speak.
+  */
+
+  await askAI({
+    type:"autonomous"
+  });
+
+  if(simulationRunning){
+
+    setTimeout(
+      runAutonomousMoment,
+      9000 + Math.random()*12000
+    );
+
+  }
 
 }
 
 
-document.getElementById(
-  "addCharacter"
-).onclick = addCharacter;
+/* =========================================================
+   ROOM
+========================================================= */
+
+function updateRoomUI(){
+
+  document.getElementById(
+    "roomName"
+  ).textContent =
+    currentRoom;
+
+  document.getElementById(
+    "sideRoom"
+  ).textContent =
+    currentRoom;
+}
 
 
-document.getElementById(
-  "toggleSim"
-).onclick = () => {
+/* =========================================================
+   SELECTED CHARACTER
+========================================================= */
 
-  state.running =
-    !state.running;
+function renderSelectedCharacter(){
 
-  render();
+  const box =
+    document.getElementById(
+      "selectedCharacterInfo"
+    );
 
-  save();
+  const character =
+    characters.find(
+      c => c.id === selectedCharacterId
+    );
 
-};
+  if(!character){
+
+    box.textContent =
+      "Nobody selected";
+
+    return;
+  }
+
+  box.innerHTML = `
+
+    <div style="display:flex;gap:10px;align-items:center">
+
+      <div class="avatar">
+        ${escapeHtml(character.avatar)}
+      </div>
+
+      <div>
+        <strong>${escapeHtml(character.name)}</strong>
+
+        <div style="color:#8991a2;font-size:12px">
+          ${escapeHtml(character.emotion)}
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:12px">
+      ${(character.traits || [])
+        .map(t =>
+          `<span class="tag">${escapeHtml(t)}</span>`
+        )
+        .join("")}
+    </div>
+
+    <p style="color:#8991a2;font-size:12px;line-height:1.45">
+      ${escapeHtml(character.personality || "No personality description yet.")}
+    </p>
+
+    <button
+      class="btn full"
+      onclick="openCharacterEditor('${character.id}')"
+    >
+      ✏️ Edit Character
+    </button>
+  `;
+}
 
 
-document.getElementById(
-  "send"
-).onclick = send;
+/* =========================================================
+   TEXTAREA
+========================================================= */
 
+function handleComposerKey(event){
 
-document.getElementById(
-  "input"
-).addEventListener(
-  "keydown",
-  e => {
+  if(event.key === "Enter" && !event.shiftKey){
 
-    if(
-      e.key === "Enter" &&
-      !e.shiftKey
-    ){
+    event.preventDefault();
 
-      e.preventDefault();
+    sendMessage();
 
-      send();
+  }
 
+}
+
+function resizeTextarea(textarea){
+
+  textarea.style.height = "auto";
+
+  textarea.style.height =
+    Math.min(
+      textarea.scrollHeight,
+      130
+    ) + "px";
+}
+
+document
+  .getElementById("messageInput")
+  .addEventListener(
+    "input",
+    function(){
+      resizeTextarea(this);
     }
+  );
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function showToast(message){
+
+  const toast =
+    document.getElementById("toast");
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  clearTimeout(
+    showToast.timer
+  );
+
+  showToast.timer =
+    setTimeout(() => {
+
+      toast.classList.remove("show");
+
+    },2500);
+}
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+/* =========================================================
+   DOUBLE CLICK CHARACTER = EDIT
+========================================================= */
+
+document.addEventListener(
+  "dblclick",
+  event => {
+
+    const card =
+      event.target.closest(
+        ".character-card"
+      );
+
+    if(!card) return;
 
   }
 );
 
 
-document
-  .querySelectorAll(".room")
-  .forEach(button => {
-
-    button.onclick = () => {
-
-      state.room =
-        button.dataset.room;
-
-
-      document
-        .querySelectorAll(".room")
-        .forEach(x =>
-          x.classList.remove("active")
-        );
-
-
-      button.classList.add("active");
-
-      render();
-
-      save();
-
-    };
-
-  });
-
-
-document.getElementById(
-  "clearBtn"
-).onclick = () => {
-
-  if(
-    confirm(
-      "Clear this conversation?"
-    )
-  ){
-
-    state.messages = [];
-
-    render();
-
-    save();
-
-  }
-
-};
-
-
-document.getElementById(
-  "saveBtn"
-).onclick = () => {
-
-  save();
-
-  alert(
-    "PersonaLab saved on this device."
-  );
-
-};
-
-
-document.getElementById(
-  "settingsBtn"
-).onclick = () => {
-
-  openModal(
-
-    "PersonaLab settings",
-
-    `
-
-    <div class="field">
-
-      <label>
-        Cloudflare Worker URL
-      </label>
-
-      <input
-        id="apiUrl"
-        value="${esc(state.apiUrl)}"
-        placeholder="https://your-worker.workers.dev"
-      >
-
-    </div>
-
-    <div class="small">
-
-      The URL is stored only in this
-      browser. Never put your Cloudflare
-      secret token here.
-
-    </div>
-
-    `,
-
-    () => {
-
-      state.apiUrl =
-        document
-          .getElementById("apiUrl")
-          .value
-          .trim();
-
-      save();
-
-    }
-
-  );
-
-};
-
-
-document.getElementById(
-  "directorBtn"
-).onclick = () => {
-
-  openModal(
-
-    "Director",
-
-    `
-
-    <div class="field">
-
-      <label>
-        Scene instruction
-      </label>
-
-      <textarea
-        id="directorText"
-        placeholder="Example: A surprise visitor enters the room."
-      ></textarea>
-
-    </div>
-
-    <div class="small">
-
-      This adds a director instruction
-      to the simulation.
-
-    </div>
-
-    `,
-
-    () => {
-
-      const t =
-        document
-          .getElementById("directorText")
-          .value
-          .trim();
-
-
-      if(!t) return;
-
-
-      state.messages.push({
-
-        role:"user",
-
-        name:"Director",
-
-        emoji:"🎬",
-
-        content:
-          "[Director] " + t
-
-      });
-
-
-      render();
-
-      save();
-
-
-      if(state.running){
-
-        aiReply(t);
-
-      }
-
-    }
-
-  );
-
-};
-
-
-document.getElementById(
-  "modalClose"
-).onclick = () => {
-
-  document
-    .getElementById("modal")
-    .classList.remove("open");
-
-};
-
-
-load();
-
-render();
+/* =========================================================
+   START
+========================================================= */
+
+renderAll();
 
 </script>
 
