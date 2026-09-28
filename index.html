@@ -632,7 +632,6 @@ button{
 
 <div class="app">
 
-  <!-- DESKTOP CHARACTER SIDEBAR -->
   <aside class="sidebar">
     <div class="brand">
       <h1>PersonaLab 🧠</h1>
@@ -648,7 +647,6 @@ button{
     </button>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
 
     <header class="topbar">
@@ -716,7 +714,6 @@ button{
 
   </main>
 
-  <!-- DESKTOP INFO PANEL -->
   <aside class="rightbar">
 
     <div class="panel">
@@ -927,11 +924,11 @@ button{
 
       <input
         id="workerUrl"
-        placeholder="https://your-worker.your-subdomain.workers.dev"
+        placeholder="https://personalab.website-dev43.workers.dev/"
       >
 
       <small style="display:block;color:#727b8d;margin-top:6px">
-        This is only your Worker URL. Never put your Cloudflare API token here.
+        PersonaLab is already connected to the Worker. You normally don't need to change this.
       </small>
 
     </div>
@@ -939,7 +936,7 @@ button{
     <div class="modal-actions">
 
       <button class="btn" onclick="closeSettings()">
-        Cancel
+        Close
       </button>
 
       <button class="btn primary" onclick="saveSettings()">
@@ -1020,6 +1017,14 @@ const STORAGE_KEY = "personalab_characters_v3";
 const CHAT_KEY = "personalab_chat_v3";
 const SETTINGS_KEY = "personalab_settings_v3";
 const ROOM_KEY = "personalab_room_v3";
+
+/*
+  PersonaLab's Worker is built in.
+  You do NOT need to paste it into Settings anymore.
+*/
+const DEFAULT_WORKER_URL =
+  "https://personalab.website-dev43.workers.dev/";
+
 
 const starterCharacters = [
 
@@ -1275,22 +1280,38 @@ function loadChat(){
   return [];
 }
 
+
+/*
+  Settings now always fall back to the built-in Worker.
+*/
+function loadSettings(){
+
+  try{
+
+    const saved =
+      JSON.parse(localStorage.getItem(SETTINGS_KEY));
+
+    return {
+      workerUrl:
+        saved?.workerUrl?.trim() ||
+        DEFAULT_WORKER_URL
+    };
+
+  }catch(e){
+
+    return {
+      workerUrl: DEFAULT_WORKER_URL
+    };
+
+  }
+}
+
 function saveChat(){
+
   localStorage.setItem(
     CHAT_KEY,
     JSON.stringify(chatHistory.slice(-150))
   );
-}
-
-function loadSettings(){
-
-  try{
-    return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {
-      workerUrl:""
-    };
-  }catch(e){
-    return {workerUrl:""};
-  }
 }
 
 
@@ -1470,12 +1491,6 @@ async function sendMessage(){
     "You"
   );
 
-  /*
-    IMPORTANT:
-    This flag tells the AI that the user is an actual
-    participant and should not be ignored.
-  */
-
   await askAI({
     type:"user_message",
     userText:text
@@ -1491,8 +1506,15 @@ async function askAI(context){
 
   aiBusy = true;
 
+  /*
+    Always use the built-in Worker unless the user
+    intentionally changes it in Settings.
+  */
   const workerUrl =
-    (settings.workerUrl || "").trim();
+    (
+      settings.workerUrl ||
+      DEFAULT_WORKER_URL
+    ).trim();
 
   const recentChat =
     chatHistory.slice(-45);
@@ -1527,6 +1549,7 @@ Do NOT ghost the user.
 
 At least one relevant character should respond to this message unless
 there is an extremely strong contextual reason not to.
+
 If the message clearly addresses a particular character,
 prioritize that character.
 
@@ -1706,20 +1729,6 @@ ${recentChat
 
   try{
 
-    if(!workerUrl){
-
-      /*
-        Local fallback so the website still works before
-        the Cloudflare Worker is connected.
-      */
-
-      await localFallback(context);
-
-      aiBusy = false;
-
-      return;
-    }
-
     const response = await fetch(
       workerUrl,
       {
@@ -1790,10 +1799,10 @@ ${recentChat
 
   }catch(error){
 
-    console.error(error);
+    console.error("PersonaLab AI error:", error);
 
     showToast(
-      "AI connection failed. Check Settings → Cloudflare Worker URL."
+      "AI connection failed. Check the Worker."
     );
 
     await localFallback(context);
@@ -1841,16 +1850,6 @@ ROOM: ${character.room || "Main Room"}
 
 function parseAIResponse(content){
 
-  /*
-    The Worker returns one AI message.
-    We split lines like:
-
-    Maya: ...
-    Jayden: ...
-
-    so the UI can show actual individual speakers.
-  */
-
   const lines =
     content
       .split("\n")
@@ -1893,11 +1892,6 @@ function parseAIResponse(content){
     }
 
   }
-
-  /*
-    If the model didn't use character labels,
-    don't lose its response.
-  */
 
   if(!foundSpeaker){
 
@@ -2349,7 +2343,8 @@ function openSettings(){
   document.getElementById(
     "workerUrl"
   ).value =
-    settings.workerUrl || "";
+    settings.workerUrl ||
+    DEFAULT_WORKER_URL;
 
   document.getElementById(
     "settingsModal"
@@ -2365,10 +2360,14 @@ function closeSettings(){
 
 function saveSettings(){
 
-  settings.workerUrl =
+  const enteredUrl =
     document.getElementById(
       "workerUrl"
     ).value.trim();
+
+  settings.workerUrl =
+    enteredUrl ||
+    DEFAULT_WORKER_URL;
 
   localStorage.setItem(
     SETTINGS_KEY,
@@ -2378,7 +2377,7 @@ function saveSettings(){
   closeSettings();
 
   showToast(
-    "Settings saved."
+    "Worker connection saved."
   );
 }
 
@@ -2512,11 +2511,6 @@ async function runAutonomousMoment(){
   if(!simulationRunning || aiBusy){
     return;
   }
-
-  /*
-    Autonomous moments are intentionally less frequent.
-    They do NOT force every character to speak.
-  */
 
   await askAI({
     type:"autonomous"
@@ -2687,25 +2681,6 @@ function escapeHtml(value){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-
-
-/* =========================================================
-   DOUBLE CLICK CHARACTER = EDIT
-========================================================= */
-
-document.addEventListener(
-  "dblclick",
-  event => {
-
-    const card =
-      event.target.closest(
-        ".character-card"
-      );
-
-    if(!card) return;
-
-  }
-);
 
 
 /* =========================================================
